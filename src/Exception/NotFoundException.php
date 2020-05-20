@@ -1,11 +1,10 @@
 <?php
 
-namespace Mix\Console\Exception;
+namespace Soen\Command\Exception;
 
 /**
  * Class NotFoundException
- * @package Mix\Exception
- * @author liu,jian <coder.keda@gmail.com>
+ * @package Soen\Console\Exception
  */
 class NotFoundException extends \RuntimeException
 {

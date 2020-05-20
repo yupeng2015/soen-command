@@ -3,7 +3,9 @@
   "description": "",
   "type": "library",
   "require": {
-    "php": ">=7.0.0"
+    "php": ">=7.0.0",
+    "psr/event-dispatcher": "1.0.*",
+    "psr/log": "1.1.*"
   },
   "license": "MIT",
   "authors": [
@@ -13,9 +15,9 @@
     }
   ],
   "autoload": {
-    "psr-4": {
-      "Soen\\Command": "src/"
-    }
+      "psr-4": {
+        "Soen\\Command\\": "src/"
+      }
   },
   "minimum-stability": "dev"
 }

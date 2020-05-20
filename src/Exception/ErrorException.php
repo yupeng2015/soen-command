@@ -1,6 +1,6 @@
 <?php
 
-namespace Soen\Console\Exception;
+namespace Soen\Command\Exception;
 
 /**
  * Class ErrorException

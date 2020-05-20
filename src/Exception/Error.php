@@ -1,24 +1,42 @@
 <?php
 
-
-namespace Soen\Console\Exception;
+namespace Soen\Command\Exception;
 
 use Soen\Command\Event\HandleExceptionEvent;
-
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\Log\LoggerInterface;
 /**
  * Class Error
  * @package Soen\Command\Exception
  */
 class Error
 {
-    function __construct()
+	/**
+	 * @var int
+	 */
+	public $level = E_ALL;
+
+	/**
+	 * @var LoggerInterface
+	 */
+	public $logger;
+
+	/**
+	 * @var EventDispatcherInterface
+	 */
+	public $dispatcher;
+
+	function __construct()
     {
         error_reporting(E_ALL);
         // 注册错误处理
         set_error_handler([$this, 'appError']);
         register_shutdown_function([$this, 'appShutdown']);
     }
-    
+
+	/**
+	 * @param $ex
+	 */
     public function appException($ex)
     {
         $event = new HandleExceptionEvent();
@@ -26,7 +44,25 @@ class Error
         // handle
         $this->handleException($ex);
     }
-    
+
+	/**
+	 * Dispatch
+	 * @param object $event
+	 */
+	protected function dispatch(object $event)
+	{
+		if (!isset($this->dispatcher)) {
+			return;
+		}
+		$this->dispatcher->dispatch($event);
+	}
+
+	/**
+	 * @param $errno
+	 * @param $errstr
+	 * @param string $errfile
+	 * @param int $errline
+	 */
     public function appError($errno, $errstr, $errfile = '', $errline = 0)
     {
         if (error_reporting() & $errno) {
@@ -52,6 +88,41 @@ class Error
         }
     }
 
+	/**
+	 * 异常处理
+	 * @param \Throwable $ex
+	 */
+	public function handleException(\Throwable $ex)
+	{
+		// 日志处理
+		if ($ex instanceof NotFoundException) {
+			// 打印到屏幕
+			println($ex->getMessage());
+			return;
+		}
+		// 输出日志
+		$this->log($ex);
+	}
+
+	/**
+	 * 返回错误级别
+	 * @param $errno
+	 * @return string
+	 */
+	public static function levelType($errno)
+	{
+		if (static::isError($errno)) {
+			return 'error';
+		}
+		if (static::isWarning($errno)) {
+			return 'warning';
+		}
+		if (static::isNotice($errno)) {
+			return 'notice';
+		}
+		return 'error';
+	}
+
     /**
      * 是否为致命错误
      * @param $errno
@@ -76,5 +147,38 @@ class Error
         }
         return false;
     }
+
+	/**
+	 * 是否警告类型
+	 * 全部类型：http://php.net/manual/zh/errorfunc.constants.php
+	 * @param $type
+	 * @return bool
+	 */
+	public static function isWarning($errno)
+	{
+		return in_array($errno, [E_WARNING, E_CORE_WARNING, E_COMPILE_WARNING, E_USER_WARNING]);
+	}
+
+	/**
+	 * 是否通知类型
+	 * 全部类型：http://php.net/manual/zh/errorfunc.constants.php
+	 * @param $type
+	 * @return bool
+	 */
+	public static function isNotice($errno)
+	{
+		return in_array($errno, [E_NOTICE, E_USER_NOTICE, E_DEPRECATED, E_USER_DEPRECATED, E_STRICT]);
+	}
+
+	/**
+	 * 是否错误类型
+	 * 全部类型：http://php.net/manual/zh/errorfunc.constants.php
+	 * @param $type
+	 * @return bool
+	 */
+	public static function isError($errno)
+	{
+		return in_array($errno, [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR]);
+	}
 
 }

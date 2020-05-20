@@ -4,7 +4,7 @@ namespace Soen\Command\Event;
 
 /**
  * Class HandleExceptionEvent
- * @package Soen\Console\Event
+ * @package Soen\Command\Event
  */
 class HandleExceptionEvent
 {

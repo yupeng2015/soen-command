@@ -26,7 +26,7 @@ class Error
 	 */
 	public $dispatcher;
 
-	function __construct()
+	function __construct(int $level, LoggerInterface $logger)
     {
         error_reporting(E_ALL);
         // 注册错误处理

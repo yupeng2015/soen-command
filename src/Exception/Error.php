@@ -28,6 +28,8 @@ class Error
 
 	function __construct(int $level, LoggerInterface $logger)
     {
+        $this->level  = $level;
+        $this->logger = $logger;
         error_reporting(E_ALL);
         // 注册错误处理
         set_error_handler([$this, 'appError']);

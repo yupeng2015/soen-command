@@ -4,17 +4,19 @@
 namespace Soen\Command;
 
 
+use Soen\Container\Container;
 use Soen\Container\Server;
 
 class Main
 {
     function __construct($httpConfigDirectory)
     {
-        $array = (new Server($httpConfigDirectory))->load();
+        $array = new Container($httpConfigDirectory);
 //        var_dump($array);
     }
     
     public function run(){
-        context()->getComponent('router')->test();
+        \App::getComponent('router')->test();
+//        context()->getComponent('router')->test();
     }
 }

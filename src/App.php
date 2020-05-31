@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Class Mix
- * @author liu,jian <coder.keda@gmail.com>
+ * Class App
  */
 class App
 {
@@ -13,7 +12,7 @@ class App
     public static $version = '2.1.15.1';
 
     /**
-     * @var \Mix\Console\Application
+     * @var \Soen\Container\Application
      */
     public static $app;
 

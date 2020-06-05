@@ -1,19 +1,18 @@
 <?php
 
-
 namespace Soen\Command;
 
-
-use Soen\Container\Container;
-use Soen\Container\Server;
+use Symfony\Component\Console\Application;
 
 class Main
 {
-    function __construct($httpConfigDirectory)
+    public $appConsole;
+    function __construct()
     {
-
+        $this->appConsole = new Application();
     }
     
     public function run(){
+        
     }
 }
